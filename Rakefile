@@ -11,26 +11,33 @@ rescue Bundler::BundlerError => e
 end
 require 'rake'
 
+$:.unshift File.dirname(__FILE__)
+
+require 'lib/version'
+
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "abbey"
   gem.homepage = "http://github.com/PJK/abbey"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = "Primitive JSON data store"
+  gem.description = %Q{Primitive JSON data store. Key-value structure with namespaces.}
   gem.email = "me@pavelkalvoda.com"
   gem.authors = ["Pavel Kalvoda"]
+  gem.version = Abbey::Version::STRING
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
 
 require 'rake/testtask'
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
+desc "Run the unit tests in test/unit"
+Rake::TestTask.new do |t|
+  t.libs << "test"
+  t.test_files = FileList['test/*_test.rb']
+  t.verbose = true
 end
+
 
 require 'rcov/rcovtask'
 Rcov::RcovTask.new do |test|
@@ -42,7 +49,7 @@ end
 
 task :default => :test
 
-require 'rake/rdoctask'
+require 'rdoc/task'
 Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
