@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "abbey"
-  s.version = "0.1.0.beta"
+  s.version = "0.1.0.beta2"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Pavel Kalvoda"]
-  s.date = "2011-11-11"
+  s.date = "2011-11-12"
   s.description = "Primitive JSON data store. Key-value structure with namespaces."
   s.email = "me@pavelkalvoda.com"
   s.extra_rdoc_files = [
@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
     "LICENSE.txt",
     "README.md",
     "Rakefile",
+    "abbey.gemspec",
     "lib/abbey.rb",
     "lib/entity_storage.rb",
     "lib/errors.rb",
