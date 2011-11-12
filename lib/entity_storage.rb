@@ -1,11 +1,19 @@
 module Abbey
+
+  # Represents the store. Manages the data for you.
+  # JSON serialization under the hood.
   class EntityStorage
+
+    # @return [Settings]
     attr_accessor :settings
 
+    # @param settings [Settings]
     def initialize(settings)
       @settings = settings
     end
 
+    # Is everything ready?
+    # @return void
     def set_up?
       ready = true
       dirs = [settings.path]
@@ -18,6 +26,8 @@ module Abbey
       ready
     end
 
+    # Set up the directory structure
+    # @return void
     def set_up!
       settings.namespaces.each do |ns|
         path = make_path(ns)
@@ -28,6 +38,11 @@ module Abbey
       end
     end
 
+    # Save an item
+    # @param namespace [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @param key [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @param data [Object]
+    # @return void
     def save(namespace, key, data)
       path = make_path(namespace, key)
       raise ItemAlreadyPresentError.new if File.exist?(path)
@@ -37,6 +52,10 @@ module Abbey
       settings.logger.info("Written #{make_key(namespace, key)} (size: #{size})")
     end
 
+    # Fetch an item
+    # @param namespace [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @param key [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @return [Object]
     def get(namespace, key)
       path = make_path(namespace, key)
       raise ItemNotFoundError.new unless exists?(namespace, key)
@@ -44,17 +63,30 @@ module Abbey
       MultiJson.decode(File.read(path))
     end
 
+    # Does the item exist?
+    # @param namespace [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @param key [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @return [Boolean]
     def exists?(namespace, key)
       exists = File.exist?(make_path(namespace, key))
       settings.logger.info("Queried #{make_key(namespace, key)}, found: #{exists}")
       exists
     end
 
+    # Update an item. Shorthand for delete & save
+    # @param namespace [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @param key [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @param data [Object]
+    # @return void
     def update(namespace, key, data)
       delete(namespace, key)
       save(namespace, key, data)
     end
 
+    # Delete an item
+    # @param namespace [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @param key [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @return void
     def delete(namespace, key)
       path = make_path(namespace, key)
       raise ItemNotFoundError.new unless exists?(namespace, key)
@@ -62,12 +94,17 @@ module Abbey
       settings.logger.info("Deleted #{make_key(namespace,key)}")
     end
 
+    # Get keys of all entries in the namespace
+    # @param namespace [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @return [Set] List of all keys in the namespace
     def list(namespace)
       list = Dir.entries(make_path(namespace)) - %w{. ..}
       list.map! {|item| File.split(item)[1].to_sym}
       list.to_set
     end
 
+    # @param namespace [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @return [Hash] Hash of all items in the namespace, indexed by items' keys
     def get_all(namespace)
       result = {}
       list(namespace).each {|key| result[key] = get(namespace, key)}
