@@ -1,12 +1,8 @@
 source "http://rubygems.org"
-# Add dependencies required to use your gem here.
-# Example:
-#   gem "activesupport", ">= 2.3.5"
 
-# Add dependencies to develop your gem here.
-# Include everything needed to run rake, tests, features, etc.
 gem "multi_json"
-gem "rdoc" if RUBY_VERSION < '1.9'
+gem "rake"
+
 gem "json_pure" if RUBY_ENGINE == "jruby"
 
 group :development do
