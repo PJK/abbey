@@ -77,4 +77,14 @@ class AbbeyTest < Test::Unit::TestCase
     @abbey.update(:ns1, :key, {"a" => 2})
     assert_equal({"a" => 2}, @abbey.get(:ns1,:key))
   end
+
+  def test_it_will_drop_items
+    @abbey.set_up!
+    @abbey.save(:ns1, :key, {"a" => 1})
+    @abbey.save(:ns1, :key2, {"a" => 2})
+    @abbey.save(:ns2, :key, {"a" => 2})
+    @abbey.drop(:ns1)
+    assert_equal(Set.new, @abbey.list(:ns1))
+    assert_equal Set.new([:key]), @abbey.list(:ns2)
+  end
 end

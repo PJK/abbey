@@ -111,6 +111,13 @@ module Abbey
       result
     end
 
+    # Delete all items in the namespace
+    # @param namespace [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @return void
+    def drop(namespace)
+      list(namespace).each {|item| delete(namespace, item)}
+    end
+
     private
 
     def make_path(namespace, key = nil)
