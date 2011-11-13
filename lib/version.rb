@@ -3,7 +3,7 @@ module Abbey
     MAJOR = 0
     MINOR = 1
     PATCH = 0
-    BUILD = 'beta2'
+    BUILD = 'beta3'
 
     STRING = [MAJOR, MINOR, PATCH, BUILD].compact.join('.')
   end
