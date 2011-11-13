@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "abbey"
-  s.version = "0.1.0.beta2"
+  s.version = "0.1.0.beta3"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Pavel Kalvoda"]
-  s.date = "2011-11-12"
+  s.date = "2011-11-13"
   s.description = "Primitive JSON data store. Key-value structure with namespaces."
   s.email = "me@pavelkalvoda.com"
   s.extra_rdoc_files = [
@@ -18,6 +18,8 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     ".document",
+    ".jrubyrc",
+    ".travis.yml",
     "Gemfile",
     "LICENSE.txt",
     "README.md",
@@ -42,21 +44,21 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<multi_json>, [">= 0"])
-      s.add_development_dependency(%q<minitest>, [">= 0"])
-      s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
+      s.add_runtime_dependency(%q<rake>, [">= 0"])
+      s.add_development_dependency(%q<bundler>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.6.4"])
       s.add_development_dependency(%q<rcov>, [">= 0"])
     else
       s.add_dependency(%q<multi_json>, [">= 0"])
-      s.add_dependency(%q<minitest>, [">= 0"])
-      s.add_dependency(%q<bundler>, ["~> 1.0.0"])
+      s.add_dependency(%q<rake>, [">= 0"])
+      s.add_dependency(%q<bundler>, [">= 0"])
       s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
       s.add_dependency(%q<rcov>, [">= 0"])
     end
   else
     s.add_dependency(%q<multi_json>, [">= 0"])
-    s.add_dependency(%q<minitest>, [">= 0"])
-    s.add_dependency(%q<bundler>, ["~> 1.0.0"])
+    s.add_dependency(%q<rake>, [">= 0"])
+    s.add_dependency(%q<bundler>, [">= 0"])
     s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
     s.add_dependency(%q<rcov>, [">= 0"])
   end
