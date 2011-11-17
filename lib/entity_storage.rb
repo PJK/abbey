@@ -4,6 +4,8 @@ module Abbey
   # JSON serialization under the hood.
   class EntityStorage
 
+    ForbiddenChars = '/'
+
     # @return [Settings]
     attr_accessor :settings
 
@@ -45,7 +47,7 @@ module Abbey
     # @return void
     def save(namespace, key, data)
       path = make_path(namespace, key)
-      raise ItemAlreadyPresentError.new if File.exist?(path)
+      raise ItemAlreadyPresentError, "Item '#{make_key(namespace,key)}' already present" if File.exist?(path)
       f = File.new(path, File::CREAT | File::RDWR)
       size = f.write(MultiJson.encode(data))
       f.close
@@ -58,7 +60,7 @@ module Abbey
     # @return [Object]
     def get(namespace, key)
       path = make_path(namespace, key)
-      raise ItemNotFoundError.new unless exists?(namespace, key)
+      raise ItemNotFoundError, "Item '#{make_key(namespace,key)}' not found" unless exists?(namespace, key)
       settings.logger.info("Read #{make_key(namespace, key)}")
       MultiJson.decode(File.read(path))
     end
@@ -89,7 +91,7 @@ module Abbey
     # @return void
     def delete(namespace, key)
       path = make_path(namespace, key)
-      raise ItemNotFoundError.new unless exists?(namespace, key)
+      raise ItemNotFoundError, "Item '#{make_key(namespace,key)}' already exists" unless exists?(namespace, key)
       File.delete(path)
       settings.logger.info("Deleted #{make_key(namespace,key)}")
     end
@@ -118,13 +120,34 @@ module Abbey
       list(namespace).each {|item| delete(namespace, item)}
     end
 
+    # Check whether the key is formally valid
+    # @param key [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @return [Boolean]
+    def identifier_valid?(key)
+      ForbiddenChars.each_char do |char|
+        return false if key.to_s.include?(char)
+      end
+    end
+
     private
 
+    def validate_namespace(namespace)
+      raise InvalidNameError, "The namespace contains illegal characters" unless identifier_valid?(namespace)
+    end
+
+    def validate_key(key)
+      raise InvalidNameError, "The key contains illegal characters" unless identifier_valid?(key)
+    end
+
+    # Compose path to a namespace or an item
     def make_path(namespace, key = nil)
+      validate_namespace(namespace)
+      validate_key(key) if key
       dir = File.join(settings.path, namespace.to_s)
       key ? File.join(dir, key.to_s) : dir
     end
 
+    # Unify IDs format
     def make_key(namespace, key)
       namespace.to_s + ':' + key.to_s
     end

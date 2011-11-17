@@ -8,7 +8,7 @@ class AbbeyTest < Test::Unit::TestCase
   end
 
   def teardown
-    FileUtils.rm_r('/tmp/abbey')
+    FileUtils.rm_r('/tmp/abbey') if Dir.exist?('/tmp/abbey')
   end
 
   def test_it_will_check_for_readiness
@@ -92,6 +92,9 @@ class AbbeyTest < Test::Unit::TestCase
     @abbey.set_up!
     @abbey.save(:ns1, "with:colon", {"a" => 1})
     assert_equal ({"a" => 1}), @abbey.get(:ns1, "with:colon")
+    assert_raise Abbey::InvalidNameError do
+      @abbey.save(:ns1, "with/slash", {"a" => 5})
+    end
   end
 
   def test_special_chars_in_namespaces
