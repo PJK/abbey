@@ -31,6 +31,7 @@ module Abbey
     # Set up the directory structure
     # @return void
     def set_up!
+      return if set_up?
       settings.namespaces.each do |ns|
         path = make_path(ns)
         if !Dir.exists?(path) then
@@ -124,8 +125,9 @@ module Abbey
     # @param key [String, Fixnum, Symbol or any other object whose #to_s method returns string]
     # @return [Boolean]
     def identifier_valid?(key)
+      key = key.to_s
       ForbiddenChars.each_char do |char|
-        return false if key.to_s.include?(char)
+        return false if key.include?(char)
       end
     end
 

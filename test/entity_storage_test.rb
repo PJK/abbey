@@ -103,7 +103,7 @@ class AbbeyTest < Test::Unit::TestCase
     abbey.save("with:colon", :key, ["datadata"])
     assert_equal ["datadata"], abbey.get("with:colon", :key)
     assert_raise Abbey::InvalidNameError do
-      Abbey::EntityStorage.new(Abbey::Settings.new('/tmp/abbey', [:ns1, :"with/slash"], Logger.new(STDOUT)))
+      Abbey::EntityStorage.new(Abbey::Settings.new('/tmp/abbey', [:ns1, :"with/slash"], Logger.new(STDOUT))).set_up!
     end
   end
 
