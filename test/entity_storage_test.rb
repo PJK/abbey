@@ -87,4 +87,18 @@ class AbbeyTest < Test::Unit::TestCase
     assert_equal(Set.new, @abbey.list(:ns1))
     assert_equal Set.new([:key]), @abbey.list(:ns2)
   end
+
+  def test_special_chars_in_keys
+    @abbey.set_up!
+    @abbey.save(:ns1, "with:colon", {"a" => 1})
+    assert_equal ({"a" => 1}), @abbey.get(:ns1, "with:colon")
+  end
+
+  def test_special_chars_in_namespaces
+    abbey = Abbey::EntityStorage.new(Abbey::Settings.new('/tmp/abbey', [:ns1, :"with:colon"], Logger.new(STDOUT)))
+    abbey.set_up!
+    abbey.save("with:colon", :key, ["datadata"])
+    assert_equal ["datadata"], abbey.get("with:colon", :key)
+  end
+
 end
