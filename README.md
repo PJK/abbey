@@ -8,7 +8,7 @@ A simple persistence library with human-readable representation. Uses good 'ol f
 
 ## Usage
 
-Warning: Abbey intentionally uses JSON, therefore it inherits its' caveats. Most notably, symbols are serialized to strings.
+Warning: Abbey intentionally uses JSON, therefore it inherits it's caveats. Most notably, symbols are serialized to strings.
 
 ```ruby
 require 'abbey'
@@ -39,7 +39,7 @@ abbey.exists?(:users, :admin) # => false
 
 abbey.settings.namespaces # => [:users, :books]
 
-abbey.settings.logger # => #<Loger....>
+abbey.settings.logger # => #<Logger....>
 ```
 
 ## License
