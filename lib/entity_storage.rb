@@ -81,8 +81,7 @@ module Abbey
     # @param data [Object]
     # @return void
     def update(namespace, key, data)
-      delete(namespace, key)
-      save(namespace, key, data)
+      unsafe_save(namespace, key, data)
     end
 
     # Delete an item
