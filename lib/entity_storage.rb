@@ -44,21 +44,6 @@ module Abbey
       end
     end
 
-    # Save an item
-    # @param namespace [String, Fixnum, Symbol or any other object whose #to_s method returns string]
-    # @param key [String, Fixnum, Symbol or any other object whose #to_s method returns string]
-    # @param data [Object]
-    # @return void
-    def save(namespace, key, data)
-      path = make_path(namespace, key)
-      raise ItemAlreadyPresentError, "Item '#{make_key(namespace,key)}' already present" if File.exist?(path)
-      tmp = Tempfile.new('abbey')      
-      size = tmp.write(MultiJson.encode(data))
-      tmp.close
-      FileUtils.mv(tmp.path, path)
-      settings.logger.info("Written #{make_key(namespace, key)} (size: #{size})")
-    end
-
     # Fetch an item
     # @param namespace [String, Fixnum, Symbol or any other object whose #to_s method returns string]
     # @param key [String, Fixnum, Symbol or any other object whose #to_s method returns string]
@@ -80,6 +65,16 @@ module Abbey
       exists
     end
 
+    # Save an item
+    # @param namespace [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @param key [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @param data [Object]
+    # @return void
+    def save(namespace, key, data)
+      raise ItemAlreadyPresentError, "Item '#{make_key(namespace,key)}' already exists" if exists?(namespace, key)
+      unsafe_save(namespace, key, data)
+    end
+
     # Update an item. Shorthand for delete & save
     # @param namespace [String, Fixnum, Symbol or any other object whose #to_s method returns string]
     # @param key [String, Fixnum, Symbol or any other object whose #to_s method returns string]
@@ -96,7 +91,7 @@ module Abbey
     # @return void
     def delete(namespace, key)
       path = make_path(namespace, key)
-      raise ItemNotFoundError, "Item '#{make_key(namespace,key)}' already exists" unless exists?(namespace, key)
+      raise ItemNotFoundError, "Item '#{make_key(namespace,key)}' not found" unless exists?(namespace, key)
       File.delete(path)
       settings.logger.info("Deleted #{make_key(namespace,key)}")
     end
@@ -156,6 +151,20 @@ module Abbey
     # Unify IDs format
     def make_key(namespace, key)
       namespace.to_s + ':' + key.to_s
+    end
+
+    # Save an item without any checks
+    # @param namespace [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @param key [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @param data [Object]
+    # @return void
+    def unsafe_save(namespace, key, data)
+      path = make_path(namespace, key)
+      tmp = Tempfile.new('abbey')      
+      size = tmp.write(MultiJson.encode(data))
+      tmp.close
+      FileUtils.mv(tmp.path, path)
+      settings.logger.info("Written #{make_key(namespace, key)} (size: #{size})")
     end
   end
 end
