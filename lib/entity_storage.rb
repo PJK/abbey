@@ -1,3 +1,6 @@
+require 'fileutils'
+require 'tempfile'
+
 module Abbey
 
   # Represents the store. Manages the data for you.
@@ -49,9 +52,10 @@ module Abbey
     def save(namespace, key, data)
       path = make_path(namespace, key)
       raise ItemAlreadyPresentError, "Item '#{make_key(namespace,key)}' already present" if File.exist?(path)
-      f = File.new(path, File::CREAT | File::RDWR)
-      size = f.write(MultiJson.encode(data))
-      f.close
+      tmp = Tempfile.new('abbey')      
+      size = tmp.write(MultiJson.encode(data))
+      tmp.close
+      FileUtils.mv(tmp.path, path)
       settings.logger.info("Written #{make_key(namespace, key)} (size: #{size})")
     end
 
