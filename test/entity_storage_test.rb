@@ -78,6 +78,13 @@ class AbbeyTest < Test::Unit::TestCase
     assert_equal({"a" => 2}, @abbey.get(:ns1,:key))
   end
 
+  def test_it_wont_update_nonexistent_item
+    @abbey.set_up!
+    assert_raise Abbey::ItemNotFoundError do
+      @abbey.update(:ns1, :key, {"a" => 2})
+    end
+  end
+
   def test_it_will_drop_items
     @abbey.set_up!
     @abbey.save(:ns1, :key, {"a" => 1})

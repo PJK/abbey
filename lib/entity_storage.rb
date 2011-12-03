@@ -81,6 +81,7 @@ module Abbey
     # @param data [Object]
     # @return void
     def update(namespace, key, data)
+      raise ItemNotFoundError, "Item '#{make_key(namespace,key)}' not found" unless exists?(namespace, key)
       unsafe_save(namespace, key, data)
     end
 
