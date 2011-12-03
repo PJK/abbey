@@ -165,6 +165,7 @@ module Abbey
       tmp.close
       FileUtils.mv(tmp.path, path)
       settings.logger.info("Written #{make_key(namespace, key)} (size: #{size})")
+      tmp.unlink
     end
   end
 end
