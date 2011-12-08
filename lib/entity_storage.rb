@@ -83,6 +83,7 @@ module Abbey
     # @param key [String, Fixnum, Symbol or any other object whose #to_s method returns string]
     # @param data [Object]
     # @return void
+    # @raise [ItemAlreadyPresentError]
     def save(namespace, key, data)
       raise ItemAlreadyPresentError, "Item '#{make_key(namespace,key)}' already exists" if exists?(namespace, key)
       unsafe_save(namespace, key, data)
@@ -93,6 +94,7 @@ module Abbey
     # @param key [String, Fixnum, Symbol or any other object whose #to_s method returns string]
     # @param data [Object]
     # @return void
+    # @raise [ItemNotFoundError]
     def update(namespace, key, data)
       raise ItemNotFoundError, "Item '#{make_key(namespace,key)}' not found" unless exists?(namespace, key)
       unsafe_save(namespace, key, data)
@@ -102,6 +104,7 @@ module Abbey
     # @param namespace [String, Fixnum, Symbol or any other object whose #to_s method returns string]
     # @param key [String, Fixnum, Symbol or any other object whose #to_s method returns string]
     # @return void
+    # @raise [ItemNotFoundError]
     def delete(namespace, key)
       path = make_path(namespace, key)
       raise ItemNotFoundError, "Item '#{make_key(namespace,key)}' not found" unless exists?(namespace, key)
