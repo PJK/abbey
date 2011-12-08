@@ -71,6 +71,13 @@ class AbbeyTest < Test::Unit::TestCase
     assert_equal({:key => {"a" => 1}, :key2 => %w{a b c}}, @abbey.get_all(:ns1))
   end
 
+  def test_optional_get
+    @abbey.set_up!
+    @abbey.save(:ns1, :key, [1,2,3])
+    assert_equal nil, @abbey.try_get(:whatever, :nonexistent)
+    assert_equal [1,2,3] , @abbey.try_get(:ns1, :key)
+  end
+
   def test_it_updates_items
     @abbey.set_up!
     @abbey.save(:ns1, :key, {"a" => 1})

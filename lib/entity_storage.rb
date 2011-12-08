@@ -48,11 +48,24 @@ module Abbey
     # @param namespace [String, Fixnum, Symbol or any other object whose #to_s method returns string]
     # @param key [String, Fixnum, Symbol or any other object whose #to_s method returns string]
     # @return [Object]
+    # @raise [ItemNotFoundError]
     def get(namespace, key)
       path = make_path(namespace, key)
       raise ItemNotFoundError, "Item '#{make_key(namespace,key)}' not found" unless exists?(namespace, key)
       settings.logger.info("Read #{make_key(namespace, key)}")
       MultiJson.decode(File.read(path))
+    end
+    
+    # Fetch an item or return nil
+    # @param namespace [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @param key [String, Fixnum, Symbol or any other object whose #to_s method returns string]
+    # @return [Object]
+    def try_get(namespace, key)
+      begin
+        return get(namespace, key)
+      rescue ItemNotFoundError => e
+        return nil
+      end
     end
 
     # Does the item exist?
