@@ -63,7 +63,7 @@ module Abbey
     def try_get(namespace, key)
       begin
         return get(namespace, key)
-      rescue ItemNotFoundError => e
+      rescue ItemNotFoundError
         return nil
       end
     end
