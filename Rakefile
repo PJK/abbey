@@ -1,4 +1,8 @@
 # encoding: utf-8
+require 'simplecov'
+SimpleCov.start do
+  add_filter 'test/'
+end
 
 require 'rubygems'
 require 'bundler'
@@ -30,21 +34,8 @@ Jeweler::Tasks.new do |gem|
 end
 Jeweler::RubygemsDotOrgTasks.new
 
-require 'rake/testtask'
-desc "Run the unit tests in test/unit"
-Rake::TestTask.new do |t|
-  t.libs << "test"
-  t.test_files = FileList['test/*_test.rb']
-  t.verbose = true
-end
-
-
-require 'rcov/rcovtask'
-Rcov::RcovTask.new do |test|
-  test.libs << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
-  test.rcov_opts << '--exclude "gems/*"'
+task :test do
+  require 'test/entity_storage_test'
 end
 
 task :default => :test

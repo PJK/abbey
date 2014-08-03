@@ -7,6 +7,6 @@ gem "json_pure" if RUBY_ENGINE == "jruby"
 
 group :development do
   gem "bundler"
-  gem "jeweler", "~> 1.6.4"
-  gem "rcov", ">= 0"
+  gem "jeweler", "~> 1.6"
+  gem "simplecov"
 end

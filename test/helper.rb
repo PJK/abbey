@@ -1,2 +1,2 @@
 require 'test/unit'
-require 'abbey'
+require 'lib/abbey'
